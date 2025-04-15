@@ -56,6 +56,8 @@ else:
 tab1, tab2, tab3, tab4 = st.tabs(["Overview", "Chart", "Valuation", "News"])
 
 with tab1:
+    st.write(f"Check DCF: https://finviz.com/quote.ashx?t={ticker}&p=d")
+    
     col1, col2, col3 = st.columns(3)
     with col1:
         st.metric("Current Price", f"${info.get('currentPrice')}")
