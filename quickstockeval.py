@@ -132,7 +132,7 @@ def generate_pdf(info, intrinsic_val, news):
     pdf.cell(200, 10, txt=f"Company: {info.get('shortName')}", ln=1)
     pdf.cell(200, 10, txt=f"Current Price: ${info.get('currentPrice')}", ln=1)
     pdf.cell(200, 10, txt=f"P/E: {info.get('trailingPE')}  |  ROE: {round(info.get('returnOnEquity', 0)*100, 2)}%", ln=1)
-    pdf.cell(200, 10, txt=f"Debt/Equity: {info.get('debtToEquity')/100}  |  FCF: {info.get('freeCashflow')}", ln=1)
+    pdf.cell(200, 10, txt=f"Debt/Equity: {info.get('debtToEquity')}/100  |  FCF: {info.get('freeCashflow')}", ln=1)
     pdf.cell(200, 10, txt=f"Intrinsic Value (DCF): ${round(intrinsic_val, 2)}", ln=1)
 
     pdf.ln(10)
