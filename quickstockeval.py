@@ -105,6 +105,7 @@ with tab2:
 
 with tab3:
     st.markdown("### Intrinsic Value Estimate (EPS-based DCF)")
+    st.write(f"Check DCF: https://www.gurufocus.com/stock/{ticker}/dcf")
     eps = info.get('trailingEps') or 0
     intrinsic_val = dcf_valuation(eps)
     curr_price = info.get('currentPrice')
