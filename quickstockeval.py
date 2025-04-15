@@ -15,10 +15,10 @@ ticker = st.text_input("Enter Stock Ticker (e.g., AAPL, MSFT)", "AAPL")
 
 @st.cache_data
 def get_stock_data(ticker):
-    stock = yf.Ticker(ticker)
-    hist = stock.history(period="6mo")
-    info = stock.info
-    return stock, hist, info
+    ticker_obj = yf.Ticker(ticker)
+    hist = ticker_obj.history(period="6mo")
+    info = ticker_obj.info
+    return hist, info
 
 @st.cache_data
 def get_news(ticker):
@@ -45,7 +45,7 @@ def dcf_valuation(eps, growth_rate=0.1, discount_rate=0.12, years=5):
     intrinsic_value = sum(present_values) + terminal_discounted
     return intrinsic_value
 
-stock, hist, info = get_stock_data(ticker)
+hist, info = get_stock_data(ticker)
 news_list = get_news(ticker)
 
 if 'shortName' in info:
