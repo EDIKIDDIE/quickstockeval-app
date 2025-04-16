@@ -105,8 +105,7 @@ with tab2:
             news = yf.Ticker(ticker).news
             if news:
                 for item in news[:5]:
-                    st.markdown(f"**[{item['title']}]({item['link']})**  
-*{item['publisher']}*")
+                        st.markdown(f"**[{item['title']}]({item['link']})**  \n*{item['publisher']}*")
             else:
                 st.info("No news found.")
         except:
