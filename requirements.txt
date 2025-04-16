@@ -1,4 +1,5 @@
 streamlit
+ta
 yfinance
 plotly
 fpdf
