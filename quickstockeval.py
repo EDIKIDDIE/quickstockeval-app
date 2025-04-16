@@ -150,8 +150,8 @@ def generate_pdf(info, intrinsic_val, news):
     return filepath
 
 with tab5:
-        st.write(f"Ticker Earning Date: https://https://www.earningswhispers.com/stocks/{ticker}")
-        st.write(f"Today Earning List: https://https://www.earningswhispers.com/calendar/{datetime.date.today()}")
+        st.write(f"Ticker Earning Date: https://www.earningswhispers.com/stocks/{ticker}")
+        st.write(f"Today Earning List: https://www.earningswhispers.com/calendar/{datetime.date.today()}")
 
 
 if st.button("Download PDF Report"):
