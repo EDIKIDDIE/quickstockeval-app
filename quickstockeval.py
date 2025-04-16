@@ -53,7 +53,7 @@ if 'shortName' in info:
 else:
     st.subheader(f"({ticker.upper()})")
 
-tab1, tab2, tab3, tab4 = st.tabs(["Overview", "Chart", "Valuation", "News"])
+tab1, tab2, tab3, tab4,tab5 = st.tabs(["Overview", "Chart", "Valuation", "News","Earning Schedule"])
 
 with tab1:
     st.write(f"Ticker Data: https://finviz.com/quote.ashx?t={ticker}&p=d")
@@ -148,6 +148,11 @@ def generate_pdf(info, intrinsic_val, news):
     filepath = f"{ticker.upper()}_report.pdf"
     pdf.output(filepath)
     return filepath
+
+with tab5:
+        st.write(f"Ticker Earning Date: https://https://www.earningswhispers.com/stocks/{ticker}")
+        st.write(f"Today Earning List: https://https://www.earningswhispers.com/calendar/{datetime.date.today()}")
+
 
 if st.button("Download PDF Report"):
     path = generate_pdf(info, intrinsic_val, news_list)
