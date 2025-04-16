@@ -53,11 +53,13 @@ if 'shortName' in info:
 else:
     st.subheader(f"({ticker.upper()})")
 
-tab1, tab2, tab3, tab4,tab5 = st.tabs(["Overview", "Chart", "Valuation", "News","Earning Schedule"])
+tab1, tab2, tab3, tab4,tab5 = st.tabs(["Overview", "Chart", "Valuation", "News","Calendar"])
 
 with tab1:
     st.write(f"Ticker Data: https://finviz.com/quote.ashx?t={ticker}&p=d")
-    
+    st.write(f"Ticker Earning Date: https://www.earningswhispers.com/stocks/{ticker}")
+    st.write(f"Hedge Follow Activity: https://hedgefollow.com/stocks/{ticker}")
+
     col1, col2, col3 = st.columns(3)
     with col1:
         st.metric("Current Price", f"${info.get('currentPrice')}")
@@ -150,8 +152,8 @@ def generate_pdf(info, intrinsic_val, news):
     return filepath
 
 with tab5:
-        st.write(f"Ticker Earning Date: https://www.earningswhispers.com/stocks/{ticker}")
-        st.write(f"Today Earning List: https://www.earningswhispers.com/calendar/{datetime.date.today()}")
+   st.write(f"Event Schedule: https://tradingeconomics.com/calendar")
+   st.write(f"Today Earning List: https://https://www.earningswhispers.com/calendar/{datetime.date.today()}")
 
 
 if st.button("Download PDF Report"):
