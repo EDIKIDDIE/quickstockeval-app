@@ -31,13 +31,19 @@ selected_interval = st.sidebar.selectbox(
 if selected_interval == "1m" and selected_period not in ["1d", "5d", "7d"]:
     st.warning("⚠️ 1-minute interval only works with time ranges up to 7 days on Yahoo Finance.")
 
-
 @st.cache_data
-def get_stock_data(ticker, period, interval):
-    stock = yf.Ticker(ticker)
-    hist = stock.history(period=period, interval=interval)
-    info = stock.info
-    return stock, hist, info
+def get_stock_data(ticker):
+    import yfinance as yf
+    try:
+        stock = yf.Ticker(ticker)
+        hist = stock.history(period="6mo")
+        info = stock.info
+        st.write("Hist:", hist.head())
+        st.write("Info:", info)
+        return hist, info
+    except Exception as e:
+        st.error(f"Failed to fetch data: {e}")
+        raise
 
 
 @st.cache_data
