@@ -256,7 +256,7 @@ def generate_pdf(info, intrinsic_val, news):
 
 with tab5:
    st.write(f"Event Schedule: https://tradingeconomics.com/calendar")
-   st.write(f"Today Earning List: https://https://www.earningswhispers.com/calendar/{datetime.date.today()}")
+   st.write(f"Today Earning List: https://www.earningswhispers.com/calendar/{datetime.date.today()}")
 
 
 if st.button("Download PDF Report"):
