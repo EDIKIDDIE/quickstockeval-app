@@ -1,5 +1,6 @@
 streamlit
 ta
+webull
 yfinance
 plotly
 fpdf
