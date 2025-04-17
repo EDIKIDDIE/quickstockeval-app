@@ -7,7 +7,29 @@ from fpdf import FPDF
 import requests
 from bs4 import BeautifulSoup
 import datetime
+from webull import webull
 
+# Initialize Webull (no login required for gappers)
+wb = webull()
+
+def get_premarket_gappers(count=20, min_volume=500000):
+    try:
+        gainers = wb.active_gainers(region='us', count=count)
+        df = pd.DataFrame(gainers)
+        df = df[["ticker", "name", "close", "change", "volume"]]
+        df.rename(columns={
+            "ticker": "Ticker",
+            "name": "Name",
+            "close": "Last Price",
+            "change": "Change %",
+            "volume": "Volume"
+        }, inplace=True)
+        df = df[df["Volume"] >= min_volume]  # Apply volume filter
+        return df.reset_index(drop=True)
+    except Exception as e:
+        st.error(f"Error fetching premarket gappers: {e}")
+        return pd.DataFrame()
+        
 st.set_page_config(layout="wide", page_title="QuickStockEval", page_icon=":chart_with_upwards_trend:")
 st.title("QuickStockEval – Streamlit Edition")
 
@@ -53,7 +75,7 @@ if 'shortName' in info:
 else:
     st.subheader(f"({ticker.upper()})")
 
-tab1, tab2, tab3, tab4,tab5 = st.tabs(["Overview", "Chart", "Valuation", "News","Calendar"])
+tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["Overview", "Chart", "Valuation", "News","Calendar","Gappers"])
 
 with tab1:
     st.write(f"Ticker Data: https://finviz.com/quote.ashx?t={ticker}&p=d")
@@ -154,6 +176,23 @@ def generate_pdf(info, intrinsic_val, news):
 with tab5:
    st.write(f"Event Schedule: https://tradingeconomics.com/calendar")
    st.write(f"Today Earning List: https://www.earningswhispers.com/calendar/{datetime.date.today()}")
+
+with tab6:
+    st.header("🚀 Premarket Gappers (Webull)")
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        num_stocks = st.slider("Number of top movers to check", 5, 50, 20)
+    with col2:
+        min_volume = st.number_input("Minimum Volume", value=500000, step=100000)
+
+    gappers_df = get_premarket_gappers(count=num_stocks, min_volume=min_volume)
+
+    if not gappers_df.empty:
+        st.dataframe(gappers_df, use_container_width=True)
+    else:
+        st.warning("No gappers found with the given criteria.")
+
 
 
 if st.button("Download PDF Report"):
