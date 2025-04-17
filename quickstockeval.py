@@ -13,38 +13,12 @@ st.title("QuickStockEval – Streamlit Edition")
 
 ticker = st.text_input("Enter Stock Ticker (e.g., AAPL, MSFT)", "AAPL")
 
-st.sidebar.markdown("### Chart Settings")
-
-selected_period = st.sidebar.selectbox(
-    "Time Range",
-    ["1d", "5d", "1mo", "3mo", "6mo", "1y", "2y", "5y", "max"],
-    index=4
-)
-
-selected_interval = st.sidebar.selectbox(
-    "Candle Interval",
-    ["1m", "5m", "15m", "30m", "1h", "1d", "1wk", "1mo"],
-    index=5
-)
-
-# Optional warning for invalid combos
-if selected_interval == "1m" and selected_period not in ["1d", "5d", "7d"]:
-    st.warning("⚠️ 1-minute interval only works with time ranges up to 7 days on Yahoo Finance.")
-
 @st.cache_data
 def get_stock_data(ticker):
-    import yfinance as yf
-    try:
-        stock = yf.Ticker(ticker)
-        hist = stock.history(period="6mo")
-        info = stock.info
-        st.write("Hist:", hist.head())
-        st.write("Info:", info)
-        return hist, info
-    except Exception as e:
-        st.error(f"Failed to fetch data: {e}")
-        raise
-
+    ticker_obj = yf.Ticker(ticker)
+    hist = ticker_obj.history(period="6mo")
+    info = ticker_obj.info
+    return hist, info
 
 @st.cache_data
 def get_news(ticker):
@@ -84,7 +58,7 @@ tab1, tab2, tab3, tab4,tab5 = st.tabs(["Overview", "Chart", "Valuation", "News",
 with tab1:
     st.write(f"Ticker Data: https://finviz.com/quote.ashx?t={ticker}&p=d")
     st.write(f"Ticker Earning Date: https://www.earningswhispers.com/stocks/{ticker}")
-    st.write(f"Hedge Follow Activity: https://hedgefollow.com/stocks/{ticker}")
+    st.write(f"Hedge Follow Activity: https://www.earningswhispers.com/stocks/{ticker}")
 
     col1, col2, col3 = st.columns(3)
     with col1:
@@ -121,100 +95,17 @@ with tab1:
         with col3:
             st.metric("ROE", f"{round(info.get('returnOnEquity', 0)*100, 2)}% vs {bench['roe']}%")
 
-stock, hist, info = get_stock_data(ticker, selected_period, selected_interval)
-
 with tab2:
-    st.markdown("### 6-Month Price Chart with EMAs, Volume, RSI, and MACD")
+    st.markdown("### 6-Month Price Chart")
+    hist['MA50'] = hist['Close'].rolling(window=50).mean()
+    hist['MA200'] = hist['Close'].rolling(window=200).mean()
 
-    chart_type = st.radio("Chart Type", ["Candlestick", "Line"], horizontal=True)
-
-    show_indicators = st.multiselect(
-        "Select EMAs to Display",
-        ["EMA 21", "EMA 34", "EMA 89", "EMA 200"],
-        default=["EMA 21", "EMA 34", "EMA 89", "EMA 200"]
-    )
-
-    ema_colors = {}
-    for ema in show_indicators:
-        ema_colors[ema] = st.color_picker(f"Pick color for {ema}", "#0000FF")
-
-    # Calculate all EMAs
-    ema_periods = [21, 34, 89, 200]
-    for period in ema_periods:
-        hist[f"EMA {period}"] = hist['Close'].ewm(span=period).mean()
-
-    # Calculate RSI and MACD using ta
-    from ta.momentum import RSIIndicator
-    from ta.trend import MACD
-
-    rsi = RSIIndicator(close=hist['Close']).rsi()
-    macd = MACD(close=hist['Close'])
-    macd_line = macd.macd()
-    signal_line = macd.macd_signal()
-    macd_hist = macd.macd_diff()
-
-    # === Price Chart ===
-    price_fig = go.Figure()
-
-    if chart_type == "Candlestick":
-        price_fig.add_trace(go.Candlestick(
-            x=hist.index,
-            open=hist['Open'],
-            high=hist['High'],
-            low=hist['Low'],
-            close=hist['Close'],
-            name='Candlestick'
-        ))
-    else:
-        price_fig.add_trace(go.Scatter(
-            x=hist.index,
-            y=hist['Close'],
-            mode='lines',
-            name='Close',
-            line=dict(color='black')
-        ))
-
-    for ema in show_indicators:
-        period = int(ema.split()[1])
-        price_fig.add_trace(go.Scatter(
-            x=hist.index,
-            y=hist[f"EMA {period}"],
-            mode='lines',
-            name=ema,
-            line=dict(color=ema_colors.get(ema, "#000000"))
-        ))
-
-    price_fig.update_layout(height=500, width=1000, title="Price + EMAs", xaxis_title="Date", yaxis_title="Price")
-    st.plotly_chart(price_fig, use_container_width=True)
-
-    # === Volume Chart ===
-    vol_fig = go.Figure()
-    vol_fig.add_trace(go.Bar(
-        x=hist.index,
-        y=hist['Volume'],
-        name='Volume',
-        marker_color='gray',
-        opacity=0.5
-    ))
-    vol_fig.update_layout(height=200, title="Volume", xaxis_title="Date", yaxis_title="Volume")
-    st.plotly_chart(vol_fig, use_container_width=True)
-
-    # === RSI Chart ===
-    rsi_fig = go.Figure()
-    rsi_fig.add_trace(go.Scatter(x=hist.index, y=rsi, name="RSI", line=dict(color='orange')))
-    rsi_fig.add_hline(y=70, line_dash="dash", line_color="red")
-    rsi_fig.add_hline(y=30, line_dash="dash", line_color="green")
-    rsi_fig.update_layout(height=200, title="RSI", xaxis_title="Date", yaxis_title="RSI")
-    st.plotly_chart(rsi_fig, use_container_width=True)
-
-    # === MACD Chart ===
-    macd_fig = go.Figure()
-    macd_fig.add_trace(go.Scatter(x=hist.index, y=macd_line, name="MACD", line=dict(color='blue')))
-    macd_fig.add_trace(go.Scatter(x=hist.index, y=signal_line, name="Signal", line=dict(color='red')))
-    macd_fig.add_trace(go.Bar(x=hist.index, y=macd_hist, name="Histogram", marker_color='gray'))
-    macd_fig.update_layout(height=250, title="MACD", xaxis_title="Date", yaxis_title="MACD")
-    st.plotly_chart(macd_fig, use_container_width=True)
-
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=hist.index, y=hist['Close'], mode='lines', name='Close'))
+    fig.add_trace(go.Scatter(x=hist.index, y=hist['MA50'], mode='lines', name='50MA'))
+    fig.add_trace(go.Scatter(x=hist.index, y=hist['MA200'], mode='lines', name='200MA'))
+    fig.update_layout(height=400, width=1000)
+    st.plotly_chart(fig)
 
 with tab3:
     st.markdown("### Intrinsic Value Estimate (EPS-based DCF)")
