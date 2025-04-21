@@ -7,29 +7,7 @@ from fpdf import FPDF
 import requests
 from bs4 import BeautifulSoup
 import datetime
-from webull import webull
 
-# Initialize Webull (no login required for gappers)
-wb = webull()
-
-def get_premarket_gappers(count=20, min_volume=500000):
-    try:
-        gainers = wb.active_gainers(region='us', count=count)
-        df = pd.DataFrame(gainers)
-        df = df[["ticker", "name", "close", "change", "volume"]]
-        df.rename(columns={
-            "ticker": "Ticker",
-            "name": "Name",
-            "close": "Last Price",
-            "change": "Change %",
-            "volume": "Volume"
-        }, inplace=True)
-        df = df[df["Volume"] >= min_volume]  # Apply volume filter
-        return df.reset_index(drop=True)
-    except Exception as e:
-        st.error(f"Error fetching premarket gappers: {e}")
-        return pd.DataFrame()
-        
 st.set_page_config(layout="wide", page_title="QuickStockEval", page_icon=":chart_with_upwards_trend:")
 st.title("QuickStockEval – Streamlit Edition")
 
@@ -75,7 +53,7 @@ if 'shortName' in info:
 else:
     st.subheader(f"({ticker.upper()})")
 
-tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs(["Overview", "Chart", "Valuation", "News","Calendar","Gappers"])
+tab1, tab2, tab3, tab4,tab5,tab6, tab7 = st.tabs(["Overview", "Chart", "Valuation", "News","Calendar", "Important Chart-Indicator", "Tools"])
 
 with tab1:
     st.write(f"Ticker Data: https://finviz.com/quote.ashx?t={ticker}&p=d")
@@ -145,8 +123,10 @@ with tab3:
 
 with tab4:
     st.markdown("### Latest News")
-    for article in news_list:
-        st.markdown(f"[{article['title']}]({article['url']})")
+    st.write(f"Ticker Related: https://finance.yahoo.com/quote/{ticker}/news/") 
+
+    st.write(f"Market Related: https://finance.yahoo.com/topic/stock-market-news/") 
+
 
 def generate_pdf(info, intrinsic_val, news):
     pdf = FPDF()
@@ -177,25 +157,35 @@ with tab5:
    st.write(f"Event Schedule: https://tradingeconomics.com/calendar")
    st.write(f"Today Earning List: https://www.earningswhispers.com/calendar/{datetime.date.today()}")
 
-with tab6:
-    st.header("🚀 Premarket Gappers (Webull)")
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        num_stocks = st.slider("Number of top movers to check", 5, 50, 20)
-    with col2:
-        min_volume = st.number_input("Minimum Volume", value=500000, step=100000)
-
-    gappers_df = get_premarket_gappers(count=num_stocks, min_volume=min_volume)
-
-    if not gappers_df.empty:
-        st.dataframe(gappers_df, use_container_width=True)
-    else:
-        st.warning("No gappers found with the given criteria.")
-
-
 
 if st.button("Download PDF Report"):
     path = generate_pdf(info, intrinsic_val, news_list)
     with open(path, "rb") as f:
         st.download_button("Click to Download", f, file_name=path)
+
+
+with tab6:
+   st.write(f"Insider Buy/Sell: http://openinsider.com/charts")
+   st.write(f"Investment Fund Exposure: https://en.macromicro.me/charts/46198/naaim-exposure-index")
+   st.write(f"Sentiment: https://sentimentrader.com/")
+
+   st.write(f"Money FLow")
+   st.write(f"M2: https://fred.stlouisfed.org/series/WM2NS/") 
+   st.write(f"Real M2: https://fred.stlouisfed.org/series/WM2NS/")     
+   st.write(f"M2 Velocity: https://fred.stlouisfed.org/series/M2V/")     
+   st.write(f"Fed Balance Sheet: https://fred.stlouisfed.org/series/QBPBSTAS")   
+   st.write(f"Fed Reverse Repo: https://fred.stlouisfed.org/series/RRPONTSYD")   
+       
+       
+    st.write(f"Debt")
+
+    st.write(f"Bond Maturity: https://fiscaldata.treasury.gov/datasets/monthly-statement-public-debt/summary-of-treasury-securities-outstanding")   
+
+    st.write(f"Key Charts")
+    st.write(f"Key Metric Watch: https://en.macromicro.me/macro/us")   
+    st.write(f"Key Metric Watch: https://www.longtermtrends.net/")   
+    st.write(f"Key Metric Watch: https://www.cnn.com/markets/fear-and-greed")   
+
+with tab7:
+   st.write(f"Option Profit Cal: https://www.optionsprofitcalculator.com/")
+   st.write(f"SPX/SPY Converter: https://spyconverter.com/")
