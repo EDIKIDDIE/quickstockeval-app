@@ -165,16 +165,16 @@ if st.button("Download PDF Report"):
 
 
 with tab6:
-   st.write(f"Insider Buy/Sell: http://openinsider.com/charts")
-   st.write(f"Investment Fund Exposure: https://en.macromicro.me/charts/46198/naaim-exposure-index")
-   st.write(f"Sentiment: https://sentimentrader.com/")
+    st.write(f"Insider Buy/Sell: http://openinsider.com/charts")
+    st.write(f"Investment Fund Exposure: https://en.macromicro.me/charts/46198/naaim-exposure-index")
+    st.write(f"Sentiment: https://sentimentrader.com/")
 
-   st.write(f"Money FLow")
-   st.write(f"M2: https://fred.stlouisfed.org/series/WM2NS/") 
-   st.write(f"Real M2: https://fred.stlouisfed.org/series/WM2NS/")     
-   st.write(f"M2 Velocity: https://fred.stlouisfed.org/series/M2V/")     
-   st.write(f"Fed Balance Sheet: https://fred.stlouisfed.org/series/QBPBSTAS")   
-   st.write(f"Fed Reverse Repo: https://fred.stlouisfed.org/series/RRPONTSYD")   
+    st.write(f"Money FLow")
+    st.write(f"M2: https://fred.stlouisfed.org/series/WM2NS/") 
+    st.write(f"Real M2: https://fred.stlouisfed.org/series/WM2NS/")     
+    st.write(f"M2 Velocity: https://fred.stlouisfed.org/series/M2V/")     
+    st.write(f"Fed Balance Sheet: https://fred.stlouisfed.org/series/QBPBSTAS")   
+    st.write(f"Fed Reverse Repo: https://fred.stlouisfed.org/series/RRPONTSYD")   
        
        
     st.write(f"Debt")
@@ -187,5 +187,5 @@ with tab6:
     st.write(f"Key Metric Watch: https://www.cnn.com/markets/fear-and-greed")   
 
 with tab7:
-   st.write(f"Option Profit Cal: https://www.optionsprofitcalculator.com/")
-   st.write(f"SPX/SPY Converter: https://spyconverter.com/")
+    st.write(f"Option Profit Cal: https://www.optionsprofitcalculator.com/")
+    st.write(f"SPX/SPY Converter: https://spyconverter.com/")
