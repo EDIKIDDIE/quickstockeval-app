@@ -165,6 +165,7 @@ if st.button("Download PDF Report"):
 
 
 with tab6:
+    st.subheader(f"Macro Sentiment")
     st.write(f"Insider Buy/Sell: http://openinsider.com/charts")
     st.write(f"Investment Fund Exposure: https://en.macromicro.me/charts/46198/naaim-exposure-index")
     st.write(f"Sentiment: https://sentimentrader.com/")
