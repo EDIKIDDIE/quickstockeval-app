@@ -169,7 +169,7 @@ with tab6:
     st.write(f"Investment Fund Exposure: https://en.macromicro.me/charts/46198/naaim-exposure-index")
     st.write(f"Sentiment: https://sentimentrader.com/")
 
-    st.write(f"Money FLow")
+    st.subheader(f"Money FLow")
     st.write(f"M2: https://fred.stlouisfed.org/series/WM2NS/") 
     st.write(f"Real M2: https://fred.stlouisfed.org/series/WM2NS/")     
     st.write(f"M2 Velocity: https://fred.stlouisfed.org/series/M2V/")     
@@ -177,11 +177,11 @@ with tab6:
     st.write(f"Fed Reverse Repo: https://fred.stlouisfed.org/series/RRPONTSYD")   
        
        
-    st.write(f"Debt")
+    st.subheader(f"Debt")
 
     st.write(f"Bond Maturity: https://fiscaldata.treasury.gov/datasets/monthly-statement-public-debt/summary-of-treasury-securities-outstanding")   
 
-    st.write(f"Key Charts")
+    st.subheader(f"Key Charts")
     st.write(f"Key Metric Watch: https://en.macromicro.me/macro/us")   
     st.write(f"Key Metric Watch: https://www.longtermtrends.net/")   
     st.write(f"Key Metric Watch: https://www.cnn.com/markets/fear-and-greed")   
