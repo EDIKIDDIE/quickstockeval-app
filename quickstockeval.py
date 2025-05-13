@@ -190,3 +190,6 @@ with tab6:
 with tab7:
     st.write(f"Option Profit Cal: https://www.optionsprofitcalculator.com/")
     st.write(f"SPX/SPY Converter: https://spyconverter.com/")
+    
+    st.write(f"Scanner Premarket: https://finviz.com/screener.ashx?v=111&f=sh_avgvol_o2000,ta_averagetruerange_o1,ta_gap_u2&ft=4")
+    st.write(f"Scanner Volume: https://finviz.com/screener.ashx?v=111&f=cap_microover%2Csh_curvol_o10000%2Csh_price_o1%2Csh_relvol_o3&ft=4&o=-volume")
